@@ -7,14 +7,13 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
     inputs:
-      logLevel:
-        description: 'Log level'     
+      environment:
+        description: 'Environment'     
         required: true
         type: choice
         options:
-        - info
-        - warning
-        - debug
+        - dev
+        - staging
 
 jobs:
   lint-checker:
@@ -28,3 +27,14 @@ jobs:
         run: npm install
       - name: Run lint
         run: npm run lint
+
+  run:
+    if: ${{ inputs.environment == 'staging' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Echo
+        run: echo 'hello world!'
